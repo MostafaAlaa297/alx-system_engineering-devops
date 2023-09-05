@@ -1,2 +1,2 @@
 #!/bin/bash
-find . -empty -type f,d -printf "%f\n" | sort
+find . -not -path '*/\.*' -empty \( -type d -o -type f \) -exec basename {} \; | sort
