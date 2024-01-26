@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+# Use IFS to set the Internal Field Separator to ":" for parsing /etc/passwd
+
+IFS=":"
+
+# Read the file /etc/passwd and extract required information
+while read -r username _ uid _ _ home _; do
+    echo "$username:$uid:$home"
+done < /etc/passwd
