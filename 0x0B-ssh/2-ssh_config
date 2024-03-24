@@ -1,0 +1,7 @@
+# Client congiguration
+Host *
+    # Use the private key at ~/.ssh/school
+    IdentityFile ~/.ssh/school
+
+    # Refuse to authenticate using a password
+    PasswordAuthentication no
