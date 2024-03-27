@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+# Install nginx web server
+
+apt-get update
+apt-get -y install nginx
+
+echo '{
+	listen 80;
+	listen [::]:80;
+
+	server_name _;
+
+	location /redirect me{
+	return 301 https://www.youtube.com/watch?v=QH2-TGUlwu4;
+
+}
+' > /etc/nginx/sites-available/redirect_me
+
+ln -s /etc/nginx/sites-available/redirect_me /etc/nginx/sites-enabled/
+
+service nginx start
