@@ -2,6 +2,7 @@
 # Run apache in the docker container
 service apache2 start
 
+# check if apache is running
 if ! service apache2 staus | grep -q "apache2 is running"; then
 	echo "Error: Apache is not running."
 	exit 1
