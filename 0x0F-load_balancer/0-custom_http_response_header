@@ -3,20 +3,28 @@
 apt-get update
 apt-get install -y nginx
 
-echo 'server {
-  listen 80 default_server;
-  listen [::]:80 default_server;
-  
+HOST_NAME=$(hostname)
+HEADER="\\\n\tadd_header X-Served-By $HOST_NAME;\n"
+FIND=$(grep X-Served-By /etc/nginx/sites-available/default)
 
-  root www/var/html;
-  index index.html index.htm index.nginx-debian.html;
+if [[ -z $FIND ]]; then
+	sed -i "23i $HEADER" /etc/nginx/sites-available/default
+fi
 
-  server_name _;
+echo "Hello World!" > /var/www/html/index.html
 
-  location / {
-     try_files $uri $uri/ =404;
-    add_header X-Served-By $HOSTNAME;
-  }
-}' > /etc/nginx/sites-available/default
+FIND=$(grep "redirect_me" /etc/nginx/sites-available/default)
+STRING="\\\n\tlocation /redirect_me {\n\t\t return 301 https://youtu.be/NKqhazLGuVQ?si=aCW18gJDSNlM8txg;\n\t}\n"
+
+if [[ -z $FIND ]]; then
+	sed -i "42i $STRING" /etc/nginx/sites-available/default
+fi
+
+FIND=$(grep "error_page 404" /etc/nginx/sites-available/default)
+ERROR="\\\n\terror_page 404 /custom_404.html;\n"
+if [[ -z $Find  ]]; then
+	echo "Page not found" > /var/www/html/custom_404.html
+	sed -i "40iERROR" /etc/nginx/sites-available/default
+fi
 
 service nginx restart
