@@ -5,7 +5,7 @@ apt-get install -y haproxy
 
 cat <<EOF > /etc/haproxy/haproxy.cfg
 frontend lb-frontend
-    bind *: 80
+    bind *:80
     mode http
     default_backend lb-backend
 backend lb-backend
