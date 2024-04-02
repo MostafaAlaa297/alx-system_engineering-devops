@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+
+apt-get update
+apt-get install -y haproxy
+
+cat <<EOF > /etc/haproxy/haproxy.cfg
+frontend lb-frontend
+    bind *: 80
+    mode http
+    default_backend lb-backend
+backend lb-backend
+    mode http
+    balance roundrobin
+    server web-01 [STUDENT_ID]-web-01:80 check
+    server web-02 [STUDENT_ID]-web-02:80 check
+EOF
+
+service haproxy restart
