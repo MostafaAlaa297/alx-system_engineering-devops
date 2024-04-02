@@ -1,4 +1,4 @@
-#!/bin/env bash
+#!/usr/bin/env bash
 
 apt-get update
 apt-get install -y nginx
@@ -8,23 +8,23 @@ HEADER="\\\n\tadd_header X-Served-By $HOST_NAME;\n"
 FIND=$(grep X-Served-By /etc/nginx/sites-available/default)
 
 if [[ -z $FIND ]]; then
-	sed -i "23i $HEADER" /etc/nginx/sites-available/default
+	sed -i "server_name _;/a $HEADER" /etc/nginx/sites-available/default
 fi
 
 echo "Hello World!" > /var/www/html/index.html
 
-FIND=$(grep "redirect_me" /etc/nginx/sites-available/default)
+FIND=$(grep -q "location /redirect_me" /etc/nginx/sites-available/default)
 STRING="\\\n\tlocation /redirect_me {\n\t\t return 301 https://youtu.be/NKqhazLGuVQ?si=aCW18gJDSNlM8txg;\n\t}\n"
 
 if [[ -z $FIND ]]; then
-	sed -i "42i $STRING" /etc/nginx/sites-available/default
+	sed -i "server_name _;/a $STRING" /etc/nginx/sites-available/default
 fi
 
-FIND=$(grep "error_page 404" /etc/nginx/sites-available/default)
+FIND=$(grep -q "error_page 404" /etc/nginx/sites-available/default)
 ERROR="\\\n\terror_page 404 /custom_404.html;\n"
-if [[ -z $Find  ]]; then
+if [[ -z $FIND ]]; then
 	echo "Page not found" > /var/www/html/custom_404.html
-	sed -i "40iERROR" /etc/nginx/sites-available/default
+	sed -i "server_name _;/a $ERROR" /etc/nginx/sites-available/default
 fi
 
 service nginx restart
