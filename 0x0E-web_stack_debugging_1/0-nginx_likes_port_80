@@ -2,7 +2,7 @@
 # Script to configure a server to be running on port 80
 
 # Replace port 8080 with port 80
-sed -i 's/8080/80/g' /etc/sites-enabled/default
+sed -i 's/8080/80/g' /etc/nginx/sites-enabled/default
 
 # Restarting the service
 sudo service nginx restart
