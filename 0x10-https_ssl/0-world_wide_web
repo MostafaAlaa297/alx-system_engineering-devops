@@ -1,0 +1,33 @@
+#!/usr/bin/env bash
+# create bash function to print domains and subdomain
+
+get_subdomain_info() {
+	local domain=$1
+	local subdomain=$2
+
+	subdomains=("www" "lb-01" "web-01" "web-02")
+
+	if [[ -n $subdomain  ]]; then
+		subdomains=($subdomain)
+	fi
+
+	for sub in "${subdomain[@]}"; do
+		echo -n "The subdomain $sub is a "
+		record_type=$(dig $sub.$domain +short |short | awk '{print $1}')
+		if [[ -z $record_type  ]]; then
+			echo "record does not exist"
+		else
+			echo "$record_type record and points to $(dig $sub.$domain +short)"
+		fi
+	done
+}
+
+if [[ $# -eq 0 ]]; then
+	echo "Error: Missing arguments"
+	exit 1
+fi
+
+domain=$1
+subdomain=$2
+
+get_subdomain_info $domain $subdomain
