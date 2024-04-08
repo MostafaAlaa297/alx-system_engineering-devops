@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+# Script to config HAProxy
+
+apt-get update
+apt-get install -y haproxy
+
+cat <<EOF > /etc/haproxy/haproxy.cfg
+frontend lb-frontend
+	mode http
+	bind *:443 ssl cert /etc/ssl/certs/ssl.pem
+	default backend servers
+backend lb-backend
+	mode http
+	balance roundrobin
+	server web-01 514727-web-01 54.197.130.4:80 check
+	server web-02 514727-web-02 52.91.160.210:80 check
