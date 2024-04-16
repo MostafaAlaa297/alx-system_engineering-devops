@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+# Script runs whoami wiht the user argument
+if [ -z $1 ]; then
+	exit 1
+else
+	sudo -u "$1" whoami
+fi
