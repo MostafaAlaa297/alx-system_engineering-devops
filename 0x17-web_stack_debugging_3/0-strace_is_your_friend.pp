@@ -8,7 +8,7 @@ service { 'apache2':
 # Fix Apache configuration file
 file { '/etc/apache2/apache2.conf':
 	ensure  => present,
-	content => template('apache/apache2.conf.erb'),
+	suorce => template('apache/apache2.conf.erb'),
 	notify  => Service['apache2'],
 }
 
