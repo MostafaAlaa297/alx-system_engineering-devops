@@ -1,18 +1,13 @@
-# Puppet manifest to fix Apache 500 error
-
-# Ensure Apache service is running
-service { 'apache2':
-	ensure  => 'running',
+# Step 1: Ensure the replacement is made in the wp-settings.php file
+file { '/var/www/html/wp-settings.php':
+  ensure  => present,
+  content => inline_template('<%= File.read("/var/www/html/wp-settings.php").gsub("class-wp-locale.phpp", "class-wp-locale.php") %>'),
 }
 
-# Fix Apache configuration file
-file { '/etc/apache2/apache2.conf':
-	ensure  => present,
-	suorce => template('apache/apache2.conf.erb'),
-	notify  => Service['apache2'],
-}
-
-# Ensure required packages are installed
-package { 'apache2':
-	ensure  => 'installed',
+# Step 2: Restart the Apache2 service using Upstart
+exec { 'restart-apache':
+  command     => 'initctl restart apache2',
+  path        => '/sbin:/usr/sbin:/bin',
+  refreshonly => true,
+  subscribe   => File['/var/www/html/wp-settings.php'],
 }
